@@ -1,0 +1,202 @@
+paths:
+
+  /products:
+    get:
+      tags:
+        - Products
+      summary: Lista prodotti
+      operationId: listProducts
+
+      responses:
+        '200':
+          description: Lista prodotti
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Product'
+
+        '401':
+          description: Non autorizzato (token mancante o non valido)
+
+    post:
+      tags:
+        - Products
+      summary: Creazione prodotto
+      operationId: createProduct
+
+      security:
+        - bearerAuth: []
+
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddProductRequest'
+
+      responses:
+        '201':
+          description: Prodotto creato
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+
+        '400':
+          description: Dati non validi
+
+        '401':
+          description: Non autorizzato
+
+  /products/{id}:
+    get:
+      tags:
+        - Products
+      summary: Dettaglio prodotto
+      operationId: getProduct
+
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          example: "64f1a2b3c4d5e6f7a8b9c000"
+
+      responses:
+        '200':
+          description: Prodotto trovato
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+
+        '404':
+          description: Prodotto non trovato
+
+    put:
+      tags:
+        - Products
+      summary: Aggiornamento prodotto
+      operationId: updateProduct
+
+      security:
+        - bearerAuth: []
+
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateProductRequest'
+
+      responses:
+        '200':
+          description: Prodotto aggiornato
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+
+        '404':
+          description: Prodotto non trovato
+
+    delete:
+      tags:
+        - Products
+      summary: Eliminazione prodotto
+      operationId: deleteProduct
+
+      security:
+        - bearerAuth: []
+
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+
+      responses:
+        '200':
+          description: Prodotto eliminato
+
+        '404':
+          description: Prodotto non trovato
+
+components:
+
+  schemas:
+
+    Product:
+      type: object
+      properties:
+        _id:
+          type: string
+          example: "64f1a2b3c4d5e6f7a8b9c999"
+
+        name:
+          type: string
+          example: Mouse Logitech MX Master 3
+
+        description:
+          type: string
+          example: Mouse wireless ergonomico
+
+        price:
+          type: number
+          example: 99.99
+
+        createdAt:
+          type: string
+          format: date-time
+          example: "2026-06-02T10:00:00.000Z"
+
+        updatedAt:
+          type: string
+          format: date-time
+          example: "2026-06-02T12:00:00.000Z"
+
+    AddProductRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          example: Tastiera meccanica RGB
+
+        description:
+          type: string
+          example: Tastiera gaming con switch rossi
+
+        price:
+          type: number
+          example: 79.99
+
+      required:
+        - name
+        - description
+        - price
+
+    UpdateProductRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          example: Tastiera meccanica RGB Pro
+
+        description:
+          type: string
+          example: Versione aggiornata con switch blu
+
+        price:
+          type: number
+          example: 89.99

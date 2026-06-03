@@ -1,0 +1,27 @@
+<footer class="app-footer">
+
+  <div class="footer-container">
+
+    <!-- LEFT -->
+    <div class="left">
+      <div class="title">ITS-CLASS</div>
+      <div class="subtitle">Gestione richieste di permessi</div>
+    </div>
+
+    <!-- CENTER LINKS -->
+    <div class="links">
+      <a [routerLink]="['/home']">Home</a>
+       <a *ngIf="userRole === 'role2'" [routerLink]="['/analytics']">
+        Analytics
+      </a>
+      <a [routerLink]="['/login']">Login</a>
+    </div>
+
+    <!-- RIGHT -->
+    <div class="right">
+      © {{ year }} ITS Class
+    </div>
+
+  </div>
+
+</footer>

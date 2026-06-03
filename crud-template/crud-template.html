@@ -1,0 +1,41 @@
+<div class="page">
+
+  <h1>Lista</h1>
+
+  <button class="btn-add" (click)="openAdd()">
+    + Aggiungi
+  </button>
+
+  <table *ngIf="crud$ | async as crud">
+
+    <thead>
+      <tr>
+        <th>Name</th>
+      </tr>
+    </thead>
+
+    <tbody>
+
+      <tr *ngFor="let c of crud" (click)="openDetail(c.id)">
+
+        <td>{{ c.name }}</td>
+
+        <td class="actions">
+
+          <button class="btn-edit" (click)="edit(c); $event.stopPropagation()">
+            Modifica
+          </button>
+
+          <button class="btn-delete" (click)="delete(c.id); $event.stopPropagation()">
+            Elimina
+          </button>
+
+        </td>
+
+      </tr>
+
+    </tbody>
+
+  </table>
+
+</div>

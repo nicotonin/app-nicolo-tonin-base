@@ -7,7 +7,7 @@ import productRouter from "./product/product.router";
 
 const router = Router();
 
-router.use('/products',isAuthenticated,productRouter);  
+router.use('/crud', isAuthenticated, productRouter);
 router.use('/auth', authRouter);
 router.use('/users', isAuthenticated, userRouter);
 

@@ -1,0 +1,43 @@
+<nav class="navbar">
+
+  <div class="container">
+
+    <!-- BRAND -->
+    <a class="brand" [routerLink]="['/home']">
+      ITS-CLASS
+    </a>
+
+    <!-- LINKS -->
+<div class="links">
+
+  <a [routerLink]="['/home']">Home</a>
+
+  <a *ngIf="(currentUser$ | async)?.role === 'role2'"
+     [routerLink]="['/analytics']">
+    Analytics
+  </a>
+
+  <a [routerLink]="['/login']">Login</a>
+
+</div>
+    <!-- RIGHT SIDE -->
+    <div class="right">
+
+      <ng-container *ngIf="(currentUser$ | async) as currentUser; else login">
+
+        <app-nav-user
+          [user]="currentUser"
+          (logout)="logout()">
+        </app-nav-user>
+
+      </ng-container>
+
+      <ng-template #login>
+        <a class="login" [routerLink]="['/login']">Login</a>
+      </ng-template>
+
+    </div>
+
+  </div>
+
+</nav>

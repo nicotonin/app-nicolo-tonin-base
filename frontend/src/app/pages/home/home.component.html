@@ -1,0 +1,70 @@
+<div class="page">
+
+  <div class="header">
+    <h1>Permessi</h1>
+    <p>Vuoi chiedere un permesso?</p>
+
+    <button class="btn-primary" (click)="openAdd()">
+      + Richiedi permesso
+    </button>
+  </div>
+
+  <div class="list">
+
+    <div class="card" *ngFor="let r of request$ | async">
+
+      <div class="top">
+        <div class="icon">📄</div>
+
+        <div class="meta">
+
+          <div class="status" [attr.data-status]="r.stato">
+            {{ r.stato }}
+          </div>
+
+        </div>
+      </div>
+
+      <div class="body">
+        <div class="text">{{ r.motivazione }}</div>
+
+        <div class="dates">
+          <span>{{ r.dataInizio | date:'mediumDate' }}</span>
+          →
+          <span>{{ r.dataFine | date:'mediumDate' }}</span>
+        </div>
+
+        <div class="evaluation" *ngIf="r.stato === 'Approvato' && r.dataValutazione">
+          Approvato il {{ r.dataValutazione | date:'mediumDate' }}
+        </div>
+
+        <div class="evaluation" *ngIf="r.stato === 'Rifiutato' && r.dataValutazione">
+          Rifiutato il {{ r.dataValutazione | date:'mediumDate' }}
+        </div>
+
+      </div>
+
+      <div class="actions" *ngIf="r.stato === 'In attesa'">
+
+        <button *ngIf="userRole === 'role1'" (click)="editRequest(r)">
+          Modifica
+        </button>
+
+        <button *ngIf="userRole === 'role1'" class="danger" (click)="deleteRequest(r.id)">
+          Elimina
+        </button>
+
+        <button *ngIf="userRole === 'role2'" class="success" (click)="approveRequest(r.id)">
+          Approva
+        </button>
+
+        <button *ngIf="userRole === 'role2'" class="danger" (click)="rejectRequest(r.id)">
+          Rifiuta
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+</div>
