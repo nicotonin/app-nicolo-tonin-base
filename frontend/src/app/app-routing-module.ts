@@ -1,12 +1,13 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { LoginComponent } from './page/login/login.component';
-import { RegisterComponent } from './page/register/register.component';
-import { HomeComponent } from './page/home/home.component';
-import { authGuard } from './utils/auth.guard';
+import { authGuard } from '../utils/auth.guard';
+import { HomeComponent } from './pages/home/home.component';
+import { LoginComponent } from './pages/login/login.component';
+import { RegisterComponent } from './pages/register/register.component';
+
 
 const routes: Routes = [
-  {
+{
     path: 'login',
     component: LoginComponent
   },
@@ -21,9 +22,9 @@ const routes: Routes = [
   },
   {
     path: 'home',
-    canActivate:[authGuard],
     component: HomeComponent
   },
+
 
 ];
 
@@ -31,4 +32,4 @@ const routes: Routes = [
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule]
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }
