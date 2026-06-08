@@ -5,10 +5,14 @@ import { isAuthenticated } from "../lib/auth/auth.middleware";
 import productRouter from "./product/product.router";
 
 
+
 const router = Router();
 
-router.use('/crud', isAuthenticated, productRouter);
 router.use('/auth', authRouter);
-router.use('/users', isAuthenticated, userRouter);
+
+router.use(isAuthenticated);
+
+router.use('/products', productRouter);
+router.use('/users', userRouter);
 
 export default router;

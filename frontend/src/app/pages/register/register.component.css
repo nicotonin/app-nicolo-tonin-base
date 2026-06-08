@@ -1,59 +1,53 @@
 .page {
-  min-height: 100vh;
+  flex: 1;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #f7f9fb;
-  font-family: 'Hanken Grotesk', sans-serif;
+  background: #ffffff;
   padding: 20px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
-/* CARD */
 .card {
-  width: 420px;
-  background: white;
-  border: 1px solid #e2e8f0;
-  padding: 40px;
-  box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+  width: 400px;
 }
 
-/* TITLE */
 h1 {
   font-size: 28px;
-  margin-bottom: 6px;
+  font-weight: 600;
+  margin-bottom: 4px;
+  color: #000000;
 }
 
 .subtitle {
   font-size: 14px;
-  color: #64748b;
-  margin-bottom: 24px;
+  color: #8e8e93;
+  margin-bottom: 32px;
 }
 
-/* LABEL */
 label {
   display: block;
-  margin-top: 14px;
+  margin-top: 16px;
   margin-bottom: 6px;
   font-size: 13px;
-  color: #64748b;
+  font-weight: 500;
+  color: #000000;
 }
 
-/* INPUT BOX */
 .input-box {
   display: flex;
   align-items: center;
-  border: 1px solid #cbd5e1;
-  padding: 10px;
+  border: 1px solid #d1d1d6;
+  padding: 10px 12px;
   gap: 8px;
-  background: #fff;
-  transition: 0.2s;
+  background: #ffffff;
+  transition: border-color 0.2s;
 }
 
 .input-box:focus-within {
-  border-color: #00327d;
+  border-color: #000000;
 }
 
-/* INPUT */
 .input-box input,
 .input-box select {
   border: none;
@@ -61,60 +55,57 @@ label {
   width: 100%;
   font-size: 14px;
   background: transparent;
-  color: #0f172a;
+  color: #000000;
 }
 
-/* ICON */
 .icon {
-  color: #64748b;
+  color: #8e8e93;
   font-size: 14px;
 }
 
-/* ERROR */
 .error {
   margin-top: 10px;
-  color: #b91c1c;
+  color: #d32f2f;
   font-size: 13px;
 }
 
-/* BUTTON */
 button {
   width: 100%;
   margin-top: 24px;
   padding: 12px;
-  background: #00327d;
-  color: white;
+  background: #000000;
+  color: #ffffff;
   border: none;
   cursor: pointer;
   font-size: 14px;
-  transition: 0.2s;
+  font-weight: 500;
+  transition: opacity 0.2s;
 }
 
 button:hover {
-  background: #0047ab;
+  opacity: 0.8;
 }
 
 button:disabled {
-  opacity: 0.6;
+  opacity: 0.4;
   cursor: not-allowed;
 }
 
-/* FOOTER */
 .footer {
-  margin-top: 20px;
+  margin-top: 24px;
   text-align: center;
   font-size: 13px;
+  color: #8e8e93;
 }
 
 .footer a {
-  color: #00327d;
+  color: #000000;
   font-weight: 600;
-  text-decoration: none;
+  text-decoration: underline;
 }
 
-/* ERROR TEXT */
 .text-danger {
   margin-top: 10px;
-  color: #b91c1c;
+  color: #d32f2f;
   font-size: 13px;
 }

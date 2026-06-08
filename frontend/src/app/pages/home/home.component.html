@@ -1,0 +1,16 @@
+<div class="page">
+
+  <div class="hero">
+    <h1>ITS-CLASS</h1>
+    <p>Gestione richieste di permessi semplice, veloce e trasparente per il tuo team.</p>
+  </div>
+
+  <div class="features">
+    <div class="feature-card" *ngFor="let f of features">
+      <div class="feature-icon">{{ f.icon }}</div>
+      <h3>{{ f.title }}</h3>
+      <p>{{ f.description }}</p>
+    </div>
+  </div>
+
+</div>

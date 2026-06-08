@@ -1,7 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
-import { BehaviorSubject, catchError, map, of, switchMap } from 'rxjs';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-home',
@@ -9,7 +6,22 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
   templateUrl: './home.component.html',
   styleUrl: './home.component.css',
 })
-export class HomeComponent{
-
- 
+export class HomeComponent {
+  features = [
+    {
+      icon: '📋',
+      title: 'Gestione Richieste',
+      description: 'Crea e monitora le richieste di permesso in modo semplice e veloce.',
+    },
+    {
+      icon: '📊',
+      title: 'Analytics',
+      description: 'Visualizza statistiche e trend sulle richieste del tuo team.',
+    },
+    {
+      icon: '🔔',
+      title: 'Notifiche',
+      description: 'Ricevi aggiornamenti in tempo reale sullo stato delle tue richieste.',
+    },
+  ];
 }

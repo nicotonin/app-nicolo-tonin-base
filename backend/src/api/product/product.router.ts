@@ -4,6 +4,7 @@ import ProductController from "./product.controller";
 import { AddProductDTO, UpdateProductDTO } from "./product.dto";
 import { validate } from "../../lib/validation-middleware";
 
+
 const router = Router();
 
 router.get("/", ProductController.list);

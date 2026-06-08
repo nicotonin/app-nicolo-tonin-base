@@ -112,8 +112,9 @@ const componentHtml = `
   <table *ngIf="items$ | async as items">
 
     <thead>
-      <tr>
+     <tr>
         <th>Name</th>
+        <th>Actions</th>
       </tr>
     </thead>
 
@@ -151,7 +152,7 @@ const componentCss = `
 .page {
   min-height: 100vh;
   padding: 40px 20px;
-  background: #f4f6fb;
+  background: #fff;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -161,7 +162,7 @@ const componentCss = `
 h1 {
   font-size: 30px;
   font-weight: 600;
-  color: #1f2937;
+  color: #000;
   margin-bottom: 25px;
 }
 
@@ -169,14 +170,14 @@ table {
   width: 100%;
   max-width: 950px;
   border-collapse: collapse;
-  background: #ffffff;
+  background: #fff;
   border-radius: 14px;
   overflow: hidden;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
 }
 
 thead {
-  background: linear-gradient(90deg, #2563eb, #1d4ed8);
+  background: #000;
   color: #fff;
 }
 
@@ -189,16 +190,16 @@ th {
 td {
   padding: 14px 16px;
   font-size: 14px;
-  color: #374151;
+  color: #000;
 }
 
 tbody tr {
-  border-bottom: 1px solid #e5e7eb;
+  border-bottom: 1px solid #ddd;
   transition: all 0.2s ease;
 }
 
 tbody tr:hover {
-  background: #f0f6ff;
+  background: #f5f5f5;
   transform: scale(1.01);
 }
 
@@ -214,9 +215,18 @@ button {
   cursor: pointer;
 }
 
-.btn-add { background: #10b981; color: white; }
-.btn-edit { background: #3b82f6; color: white; }
-.btn-delete { background: #ef4444; color: white; }
+.btn-add { background: #000; color: #fff; }
+.btn-edit { background: #555; color: #fff; }
+.btn-delete { background: #000; color: #fff; }
+`;
+
+/* =========================
+   MODAL CSS
+========================= */
+const modalCss = `
+.modal-body {
+  padding: 20px;
+}
 `;
 
 /* =========================
@@ -233,6 +243,7 @@ import { ${ClassName} } from '../../../service/${name}.entity';
   selector: 'app-${name}-modal',
   standalone: true,
   imports: [CommonModule, FormsModule],
+  styleUrl: './${name}-modal.component.css',
   template: \`
     <div class="modal-header">
       <h4 class="modal-title">{{ item.id ? 'Modifica' : 'Aggiungi' }} ${name}</h4>
@@ -323,7 +334,7 @@ const detailCss = `
 .page {
   min-height: 100vh;
   padding: 40px 20px;
-  background: #f4f6fb;
+  background: #fff;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -333,7 +344,7 @@ const detailCss = `
 h1 {
   font-size: 30px;
   font-weight: 600;
-  color: #1f2937;
+  color: #000;
   margin-bottom: 25px;
 }
 
@@ -348,7 +359,7 @@ h1 {
 
 .card p {
   font-size: 15px;
-  color: #374151;
+  color: #000;
   margin: 8px 0;
 }
 
@@ -358,8 +369,8 @@ h1 {
   padding: 10px 20px;
   border-radius: 8px;
   cursor: pointer;
-  background: #6b7280;
-  color: white;
+  background: #000;
+  color: #fff;
   font-size: 14px;
 }
 `;
@@ -392,33 +403,33 @@ export class ${ClassName}Service {
 
   list() {
     return this.http.get<${ClassName}[]>(
-      \`\${environment.apiUrl}/${name}\`
+      \`\${environment.apiUrl}/${name}s\`
     );
   }
 
   get(id: string) {
     return this.http.get<${ClassName}>(
-      \`\${environment.apiUrl}/${name}/\${id}\`
+      \`\${environment.apiUrl}/${name}s/\${id}\`
     );
   }
 
   create(data: Partial<${ClassName}>) {
     return this.http.post<${ClassName}>(
-      \`\${environment.apiUrl}/${name}\`,
+      \`\${environment.apiUrl}/${name}s\`,
       data
     );
   }
 
   update(id: string, body: Partial<${ClassName}>) {
     return this.http.put<${ClassName}>(
-      \`\${environment.apiUrl}/${name}/\${id}\`,
+      \`\${environment.apiUrl}/${name}s/\${id}\`,
       body
     );
   }
 
   remove(id: string) {
     return this.http.delete(
-      \`\${environment.apiUrl}/${name}/\${id}\`
+      \`\${environment.apiUrl}/${name}s/\${id}\`
     );
   }
 }
@@ -430,6 +441,7 @@ export class ${ClassName}Service {
 fs.writeFileSync(path.join(pagePath, `${name}.component.ts`), componentTs);
 fs.writeFileSync(path.join(pagePath, `${name}.component.html`), componentHtml);
 fs.writeFileSync(path.join(pagePath, `${name}.component.css`), componentCss);
+fs.writeFileSync(path.join(pagePath, `${name}-modal.component.css`), modalCss);
 fs.writeFileSync(path.join(pagePath, `${name}-modal.component.ts`), modalTs);
 fs.writeFileSync(path.join(pagePath, `${name}-detail.component.ts`), detailTs);
 fs.writeFileSync(path.join(pagePath, `${name}-detail.component.html`), detailHtml);
@@ -504,3 +516,4 @@ if (!routingContent.includes(`path: '${name}'`)) {
 fs.writeFileSync(routingPath, routingContent);
 
 console.log('✅ RoutingModule aggiornato (routes)');
+

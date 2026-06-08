@@ -15,8 +15,13 @@ export class AuthService {
   protected jwtSrv = inject(JwtService);
   protected router = inject(Router);
 
+  protected _currentUser: User | null = null;
   protected _currentUser$ = new ReplaySubject<User | null>(1);
   currentUser$ = this._currentUser$.asObservable();
+
+  getCurrentUser(): User | null {
+    return this._currentUser;
+  }
 
   constructor() {
     const token = this.jwtSrv.getToken();
@@ -24,6 +29,7 @@ export class AuthService {
     if (token) {
       const decoded = this.jwtSrv.decodeToken<User>();
       if (decoded) {
+        this._currentUser = decoded;
         this._currentUser$.next(decoded);
       } else {
         this.logout();
@@ -41,21 +47,22 @@ export class AuthService {
 
 
   login(email: string, password: string) {
-    return this.http.post<any>(`${environment.apiUrl}/login`, {email, password})
+    return this.http.post<any>(`${environment.apiUrl}/auth/login`, {email, password})
       .pipe(
         tap(res => this.jwtSrv.setToken(res.token)),
-        tap(res => this._currentUser$.next(res.user)),
+        tap(res => { this._currentUser = res.user; this._currentUser$.next(res.user); }),
         map(res => res.user)
       );
   }
 
-  register(user: {firstName: string;lastName: string;email: string;password: string;}) {
-  return this.http.post<User>(`${environment.apiUrl}/register`, user)
+  register(user: {firstName: string;lastName: string;email: string;password: string;role: string}) {
+  return this.http.post<User>(`${environment.apiUrl}/auth/register`, user)
 }
 
 
   logout() {
     this.jwtSrv.removeToken();
+    this._currentUser = null;
     this._currentUser$.next(null);
   }
 
