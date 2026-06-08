@@ -109,6 +109,7 @@ const componentHtml = `
     + Aggiungi
   </button>
 
+  <div class="table-wrapper">
   <table *ngIf="items$ | async as items">
 
     <thead>
@@ -141,6 +142,7 @@ const componentHtml = `
     </tbody>
 
   </table>
+  </div>
 
 </div>
 `;
@@ -156,51 +158,59 @@ const componentCss = `
   display: flex;
   flex-direction: column;
   align-items: center;
-  font-family: Arial, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
 h1 {
-  font-size: 30px;
+  font-size: 15px;
   font-weight: 600;
   color: #000;
-  margin-bottom: 25px;
+  letter-spacing: -0.3px;
+  margin-bottom: 20px;
+}
+
+.table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  display: flex;
+  justify-content: center;
 }
 
 table {
-  width: 100%;
-  max-width: 950px;
+  width: auto;
+  min-width: 500px;
+  max-width: 100%;
   border-collapse: collapse;
-  background: #fff;
-  border-radius: 14px;
-  overflow: hidden;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
-}
-
-thead {
-  background: #000;
-  color: #fff;
 }
 
 th {
   text-align: left;
-  padding: 16px;
-  font-size: 14px;
+  padding: 10px 0;
+  font-size: 12px;
+  font-weight: 600;
+  color: #000;
+  letter-spacing: -0.2px;
+  border-bottom: 1px solid #e5e5e5;
 }
 
 td {
-  padding: 14px 16px;
-  font-size: 14px;
+  padding: 10px 0;
+  font-size: 13px;
   color: #000;
+  opacity: 0.7;
+  border-bottom: 1px solid #f0f0f0;
 }
 
 tbody tr {
-  border-bottom: 1px solid #ddd;
-  transition: all 0.2s ease;
+  transition: opacity 0.2s ease;
 }
 
 tbody tr:hover {
-  background: #f5f5f5;
-  transform: scale(1.01);
+  opacity: 1;
+}
+
+tbody tr:hover td {
+  opacity: 1;
 }
 
 .actions {
@@ -210,14 +220,71 @@ tbody tr:hover {
 
 button {
   border: none;
-  padding: 6px 12px;
-  border-radius: 8px;
+  padding: 4px 10px;
   cursor: pointer;
+  font-size: 11px;
+  font-family: inherit;
+  opacity: 0.7;
+  transition: opacity 0.2s;
 }
 
-.btn-add { background: #000; color: #fff; }
-.btn-edit { background: #555; color: #fff; }
-.btn-delete { background: #000; color: #fff; }
+button:hover {
+  opacity: 1;
+}
+
+.btn-add {
+  background: none;
+  color: #000;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 6px 0;
+  margin-bottom: 16px;
+  opacity: 0.7;
+}
+
+.btn-add:hover {
+  opacity: 1;
+}
+
+.btn-edit { background: none; color: #000; }
+.btn-delete { background: none; color: #000; }
+
+@media (max-width: 768px) {
+  .page {
+    padding: 24px 12px;
+  }
+
+  h1 {
+    font-size: 14px;
+    margin-bottom: 16px;
+  }
+
+  .table-wrapper {
+    justify-content: flex-start;
+  }
+
+  table {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  th,
+  td {
+    padding: 8px 0;
+    font-size: 12px;
+  }
+
+  .actions {
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  button {
+    padding: 4px 8px;
+    font-size: 11px;
+  }
+}
 `;
 
 /* =========================
@@ -338,7 +405,7 @@ const detailCss = `
   display: flex;
   flex-direction: column;
   align-items: center;
-  font-family: Arial, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
 h1 {
@@ -350,15 +417,14 @@ h1 {
 
 .card {
   background: #fff;
-  border-radius: 14px;
   padding: 24px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
   width: 100%;
   max-width: 600px;
 }
 
 .card p {
-  font-size: 15px;
+  font-size: 14px;
   color: #000;
   margin: 8px 0;
 }
@@ -367,11 +433,36 @@ h1 {
   margin-top: 20px;
   border: none;
   padding: 10px 20px;
-  border-radius: 8px;
   cursor: pointer;
   background: #000;
   color: #fff;
-  font-size: 14px;
+  font-size: 13px;
+  font-family: inherit;
+}
+
+@media (max-width: 768px) {
+  .page {
+    padding: 24px 12px;
+  }
+
+  h1 {
+    font-size: 22px;
+    margin-bottom: 18px;
+  }
+
+  .card {
+    padding: 16px;
+  }
+
+  .card p {
+    font-size: 13px;
+  }
+
+  .btn-back {
+    width: 100%;
+    max-width: 300px;
+    text-align: center;
+  }
 }
 `;
 
@@ -380,7 +471,7 @@ h1 {
 ========================= */
 const entity = `
 export type ${ClassName} = {
-  id: string;
+  id?: string;
   name: string;
 };
 `;

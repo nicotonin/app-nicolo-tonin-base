@@ -1,0 +1,46 @@
+<div class="page">
+
+  <h1>Lista Categorie</h1>
+
+  <button class="btn-add" (click)="openAdd()">
+    + Aggiungi
+  </button>
+
+  <div class="table-wrapper">
+  <table *ngIf="items$ | async as items">
+
+    <thead>
+     <tr>
+        <th>Name</th>
+        <th>Description</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+
+    <tbody>
+
+      <tr *ngFor="let c of items" (click)="openDetail(c.id)">
+
+        <td>{{ c.name }}</td>
+        <td>{{ c.description }}</td>
+
+        <td class="actions">
+
+          <button class="btn-edit" (click)="edit(c); $event.stopPropagation()">
+            Modifica
+          </button>
+
+          <button class="btn-delete" (click)="delete(c.id); $event.stopPropagation()">
+            Elimina
+          </button>
+
+        </td>
+
+      </tr>
+
+    </tbody>
+
+  </table>
+  </div>
+
+</div>

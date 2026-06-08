@@ -15,6 +15,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  position: relative;
 }
 
 .brand {
@@ -28,6 +29,9 @@
 .links {
   display: flex;
   gap: 24px;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 .links a {
@@ -59,4 +63,44 @@
 .login:hover {
   opacity: 1;
   text-decoration: none;
+}
+
+@media (max-width: 768px) {
+  .navbar {
+    padding: 0 16px;
+  }
+
+  .links {
+    gap: 14px;
+  }
+
+  .links a {
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 576px) {
+  .navbar {
+    height: auto;
+    padding: 12px 16px;
+  }
+
+  .container {
+    flex-wrap: wrap;
+    gap: 10px;
+    position: static;
+  }
+
+  .links {
+    position: static;
+    transform: none;
+    order: 3;
+    width: 100%;
+    justify-content: center;
+    gap: 16px;
+  }
+
+  .brand {
+    font-size: 14px;
+  }
 }

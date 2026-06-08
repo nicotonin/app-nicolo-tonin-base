@@ -4,20 +4,27 @@ import { authGuard } from '../utils/auth.guard';
 import { HomeComponent } from './pages/home/home.component';
 import { LoginComponent } from './pages/login/login.component';
 import { RegisterComponent } from './pages/register/register.component';
-import { ProductComponent } from './pages/product/product.component';
-import { ProductDetailComponent } from './pages/product/product-detail.component';
-
-
-
+import { CategoryComponent } from './pages/category/category.component';
+import { CategoryDetailComponent } from './pages/category/category-detail.component';
+import { FilmComponent } from './pages/film/film.component';
+import { FilmDetailComponent } from './pages/film/film-detail.component';
 
 const routes: Routes = [
   {
-    path: 'product',
-    component: ProductComponent
+    path: 'category',
+    component: CategoryComponent
   },
   {
-    path: 'product/:id',
-    component: ProductDetailComponent
+    path: 'category/:id',
+    component: CategoryDetailComponent
+  },
+  {
+    path: 'film',
+    component: FilmComponent
+  },
+  {
+    path: 'film/:id',
+    component: FilmDetailComponent
   },
   {
     path: 'login',
@@ -36,8 +43,6 @@ const routes: Routes = [
     path: 'home',
     component: HomeComponent
   },
-
-
 ];
 
 @NgModule({
