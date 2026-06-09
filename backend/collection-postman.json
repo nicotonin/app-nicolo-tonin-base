@@ -1,0 +1,948 @@
+{
+  "info": {
+    "name": "App Sport API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseurl", "value": "http://localhost:3000/api" },
+    { "key": "token", "value": "" },
+    { "key": "teamId", "value": "" },
+    { "key": "atletaId", "value": "" },
+    { "key": "atletaName", "value": "" },
+    { "key": "atletaLastName", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register - Dipendente",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 201', () => { pm.response.to.have.status(201); });",
+                  "const json = pm.response.json();",
+                  "pm.collectionVariables.set('userId_dipendente', json.id || json._id);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"firstName\": \"Mario\",\n  \"lastName\": \"Rossi\",\n  \"email\": \"mario.rossi@azienda.it\",\n  \"role\": \"dipendente\",\n  \"password\": \"Password123!\"\n}"
+            },
+            "url": "{{baseurl}}/auth/register"
+          }
+        },
+        {
+          "name": "Register - Responsabile",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 201', () => { pm.response.to.have.status(201); });",
+                  "const json = pm.response.json();",
+                  "pm.collectionVariables.set('userId_responsabile', json.id || json._id);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"firstName\": \"Laura\",\n  \"lastName\": \"Bianchi\",\n  \"email\": \"laura.bianchi@azienda.it\",\n  \"role\": \"responsabile\",\n  \"password\": \"Password123!\"\n}"
+            },
+            "url": "{{baseurl}}/auth/register"
+          }
+        },
+        {
+          "name": "Register - ValidationError",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 400', () => { pm.response.to.have.status(400); });",
+                  "const json = pm.response.json();",
+                  "pm.test('Error is ValidationError', () => { pm.expect(json.error).to.eql('ValidationError'); });",
+                  "pm.test('Has details array', () => { pm.expect(json.details).to.be.an('array'); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"firstName\": \"Mario123\",\n  \"lastName\": \"\",\n  \"email\": \"non-email\",\n  \"role\": \"\",\n  \"password\": \"weak\"\n}"
+            },
+            "url": "{{baseurl}}/auth/register"
+          }
+        },
+        {
+          "name": "Register - DuplicateEmail",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 400', () => { pm.response.to.have.status(400); });",
+                  "const json = pm.response.json();",
+                  "pm.test('Error is UserExists', () => { pm.expect(json.error).to.eql('UserExists'); });",
+                  "pm.test('Message is username already in use', () => { pm.expect(json.message).to.eql('username already in use'); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"firstName\": \"Mario\",\n  \"lastName\": \"Rossi\",\n  \"email\": \"mario.rossi@azienda.it\",\n  \"role\": \"dipendente\",\n  \"password\": \"Password123!\"\n}"
+            },
+            "url": "{{baseurl}}/auth/register"
+          }
+        },
+        {
+          "name": "Login - Dipendente",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', () => { pm.response.to.have.status(200); });",
+                  "const json = pm.response.json();",
+                  "pm.test('Has token', () => { pm.expect(json).to.have.property('token'); });",
+                  "pm.collectionVariables.set('token', json.token);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"mario.rossi@azienda.it\",\n  \"password\": \"Password123!\"\n}"
+            },
+            "url": "{{baseurl}}/auth/login"
+          }
+        },
+        {
+          "name": "Login - Responsabile",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', () => { pm.response.to.have.status(200); });",
+                  "const json = pm.response.json();",
+                  "pm.test('Has token', () => { pm.expect(json).to.have.property('token'); });",
+                  "pm.collectionVariables.set('token', json.token);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"laura.bianchi@azienda.it\",\n  \"password\": \"Password123!\"\n}"
+            },
+            "url": "{{baseurl}}/auth/login"
+          }
+        },
+        {
+          "name": "Login - InvalidEmail",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 400', () => { pm.response.to.have.status(400); });",
+                  "const json = pm.response.json();",
+                  "pm.test('Error is LoginError', () => { pm.expect(json.error).to.eql('LoginError'); });",
+                  "pm.test('Message is invalid email', () => { pm.expect(json.message).to.eql('invalid email'); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"inesistente@azienda.it\",\n  \"password\": \"Password123!\"\n}"
+            },
+            "url": "{{baseurl}}/auth/login"
+          }
+        },
+        {
+          "name": "Login - WrongPassword",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 400', () => { pm.response.to.have.status(400); });",
+                  "const json = pm.response.json();",
+                  "pm.test('Error is LoginError', () => { pm.expect(json.error).to.eql('LoginError'); });",
+                  "pm.test('Message is password supplied', () => { pm.expect(json.message).to.eql('password supplied'); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"mario.rossi@azienda.it\",\n  \"password\": \"WrongPass1!\"\n}"
+            },
+            "url": "{{baseurl}}/auth/login"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Teams",
+      "item": [
+        {
+          "name": "Create Team",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 201', () => { pm.response.to.have.status(201); });",
+                  "const json = pm.response.json();",
+                  "pm.collectionVariables.set('teamId', json.id || json._id);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Squadra Rossa\",\n  \"categoria\": \"Serie A\"\n}"
+            },
+            "url": "{{baseurl}}/teams"
+          }
+        },
+        {
+          "name": "Create Team - ValidationError",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 400', () => { pm.response.to.have.status(400); });",
+                  "const json = pm.response.json();",
+                  "pm.test('Error is ValidationError', () => { pm.expect(json.error).to.eql('ValidationError'); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"\"\n}"
+            },
+            "url": "{{baseurl}}/teams"
+          }
+        },
+        {
+          "name": "List Teams",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', () => { pm.response.to.have.status(200); });",
+                  "pm.test('Response is an array', () => { pm.expect(pm.response.json()).to.be.an('array'); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": "{{baseurl}}/teams"
+          }
+        },
+        {
+          "name": "Get Team",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', () => { pm.response.to.have.status(200); });",
+                  "const json = pm.response.json();",
+                  "pm.test('Has name', () => { pm.expect(json).to.have.property('name'); });",
+                  "pm.test('Has categoria', () => { pm.expect(json).to.have.property('categoria'); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": "{{baseurl}}/teams/{{teamId}}"
+          }
+        },
+        {
+          "name": "Get Team - NotFound",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 404', () => { pm.response.to.have.status(404); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": "{{baseurl}}/teams/000000000000000000000000"
+          }
+        },
+        {
+          "name": "Update Team",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', () => { pm.response.to.have.status(200); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Squadra Blu\",\n  \"categoria\": \"Serie B\"\n}"
+            },
+            "url": "{{baseurl}}/teams/{{teamId}}"
+          }
+        },
+        {
+          "name": "Update Team - ValidationError",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 400', () => { pm.response.to.have.status(400); });",
+                  "const json = pm.response.json();",
+                  "pm.test('Error is ValidationError', () => { pm.expect(json.error).to.eql('ValidationError'); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": 123\n}"
+            },
+            "url": "{{baseurl}}/teams/{{teamId}}"
+          }
+        },
+        {
+          "name": "Delete Team - NotFound",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 404', () => { pm.response.to.have.status(404); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": "{{baseurl}}/teams/000000000000000000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Atleti",
+      "item": [
+        {
+          "name": "Create Atleta",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 201', () => { pm.response.to.have.status(201); });",
+                  "const json = pm.response.json();",
+                  "pm.collectionVariables.set('atletaId', json.id || json._id);",
+                  "pm.collectionVariables.set('atletaName', json.name);",
+                  "pm.collectionVariables.set('atletaLastName', json.lastName);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Marco\",\n  \"lastName\": \"Verdi\",\n  \"dataDiNascita\": \"2000-05-15T00:00:00.000Z\",\n  \"altezza\": 185,\n  \"peso\": 78,\n  \"ruolo\": \"Attaccante\",\n  \"teamId\": \"{{teamId}}\"\n}"
+            },
+            "url": "{{baseurl}}/atletis"
+          }
+        },
+        {
+          "name": "Create Atleta - ValidationError",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 400', () => { pm.response.to.have.status(400); });",
+                  "const json = pm.response.json();",
+                  "pm.test('Error is ValidationError', () => { pm.expect(json.error).to.eql('ValidationError'); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"\",\n  \"lastName\": \"\",\n  \"altezza\": \"non-un-numero\"\n}"
+            },
+            "url": "{{baseurl}}/atletis"
+          }
+        },
+        {
+          "name": "List Atleti",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', () => { pm.response.to.have.status(200); });",
+                  "pm.test('Response is an array', () => { pm.expect(pm.response.json()).to.be.an('array'); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": "{{baseurl}}/atletis"
+          }
+        },
+        {
+          "name": "Get Atleta",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', () => { pm.response.to.have.status(200); });",
+                  "const json = pm.response.json();",
+                  "pm.test('Has name', () => { pm.expect(json).to.have.property('name'); });",
+                  "pm.test('Has lastName', () => { pm.expect(json).to.have.property('lastName'); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": "{{baseurl}}/atletis/{{atletaId}}"
+          }
+        },
+        {
+          "name": "Get Atleta - NotFound",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 404', () => { pm.response.to.have.status(404); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": "{{baseurl}}/atletis/000000000000000000000000"
+          }
+        },
+        {
+          "name": "Update Atleta",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', () => { pm.response.to.have.status(200); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"peso\": 80\n}"
+            },
+            "url": "{{baseurl}}/atletis/{{atletaId}}"
+          }
+        },
+        {
+          "name": "Update Atleta - ValidationError",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 400', () => { pm.response.to.have.status(400); });",
+                  "const json = pm.response.json();",
+                  "pm.test('Error is ValidationError', () => { pm.expect(json.error).to.eql('ValidationError'); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"altezza\": \"non-un-numero\"\n}"
+            },
+            "url": "{{baseurl}}/atletis/{{atletaId}}"
+          }
+        },
+        {
+          "name": "Delete Atleta - NotFound",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 404', () => { pm.response.to.have.status(404); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": "{{baseurl}}/atletis/000000000000000000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Anayltics",
+      "item": [
+        {
+          "name": "Youngest",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', () => { pm.response.to.have.status(200); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": "{{baseurl}}/anaylticss/youngest"
+          }
+        },
+        {
+          "name": "Avg Weight",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', () => { pm.response.to.have.status(200); });",
+                  "const json = pm.response.json();",
+                  "pm.test('Has avg property', () => { pm.expect(json).to.have.property('avg'); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": "{{baseurl}}/anaylticss/avg-weight"
+          }
+        },
+        {
+          "name": "Avg Height",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', () => { pm.response.to.have.status(200); });",
+                  "const json = pm.response.json();",
+                  "pm.test('Has avg property', () => { pm.expect(json).to.have.property('avg'); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": "{{baseurl}}/anaylticss/avg-height"
+          }
+        },
+        {
+          "name": "By Name",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', () => { pm.response.to.have.status(200); });",
+                  "const json = pm.response.json();",
+                  "pm.test('Has name', () => { pm.expect(json).to.have.property('name'); });",
+                  "pm.test('Has categoria', () => { pm.expect(json).to.have.property('categoria'); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"{{atletaName}}\",\n  \"lastName\": \"{{atletaLastName}}\"\n}"
+            },
+            "url": "{{baseurl}}/anaylticss/by-name"
+          }
+        },
+        {
+          "name": "By Name - NotFound",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 404', () => { pm.response.to.have.status(404); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"NomeInesistente\",\n  \"lastName\": \"CognomeInesistente\"\n}"
+            },
+            "url": "{{baseurl}}/anaylticss/by-name"
+          }
+        },
+        {
+          "name": "By Name - ValidationError",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 400', () => { pm.response.to.have.status(400); });",
+                  "const json = pm.response.json();",
+                  "pm.test('Error is ValidationError', () => { pm.expect(json.error).to.eql('ValidationError'); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"\"\n}"
+            },
+            "url": "{{baseurl}}/anaylticss/by-name"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Users",
+      "item": [
+        {
+          "name": "List Users",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', () => { pm.response.to.have.status(200); });",
+                  "pm.test('Response is an array', () => { pm.expect(pm.response.json()).to.be.an('array'); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": "{{baseurl}}/users?role=dipendente"
+          }
+        },
+        {
+          "name": "List Users - ValidationError",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 400', () => { pm.response.to.have.status(400); });",
+                  "const json = pm.response.json();",
+                  "pm.test('Error is ValidationError', () => { pm.expect(json.error).to.eql('ValidationError'); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": "{{baseurl}}/users?role=admin"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Cleanup",
+      "item": [
+        {
+          "name": "Delete Atleta",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', () => { pm.response.to.have.status(200); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": "{{baseurl}}/atletis/{{atletaId}}"
+          }
+        },
+        {
+          "name": "Delete Team",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', () => { pm.response.to.have.status(200); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": "{{baseurl}}/teams/{{teamId}}"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Auth - Unauthorized",
+      "item": [
+        {
+          "name": "List Teams - NoToken",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 401', () => { pm.response.to.have.status(401); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseurl}}/teams"
+          }
+        },
+        {
+          "name": "List Teams - InvalidToken",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 401', () => { pm.response.to.have.status(401); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer invalidtoken123" }
+            ],
+            "url": "{{baseurl}}/teams"
+          }
+        }
+      ]
+    }
+  ]
+}

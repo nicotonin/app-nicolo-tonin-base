@@ -14,7 +14,7 @@ class {{Name}}Controller {
   get = async (req: Request, res: Response) => {
     try {
       const item = await {{Name}}Service.get(req.params.id);
-      if (!item) res.status(404).json({ message: "Non trovato" });
+      if (!item) { res.status(404).json({ message: "Non trovato" }); return; }
       res.json(item);
     } catch (err) {
       res.status(500).json({ message: "Errore nel recupero" });
@@ -32,7 +32,7 @@ class {{Name}}Controller {
   update = async (req: Request, res: Response) => {
     try {
       const item = await {{Name}}Service.update(req.params.id, req.body);
-      if (!item) res.status(404).json({ message: "Non trovato" });
+      if (!item) { res.status(404).json({ message: "Non trovato" }); return; }
       res.json(item);
     } catch (err) {
       res.status(400).json({ message: "Errore nell'aggiornamento" });
@@ -42,7 +42,7 @@ class {{Name}}Controller {
   remove = async (req: Request, res: Response) => {
     try {
       const item = await {{Name}}Service.remove(req.params.id);
-      if (!item) res.status(404).json({ message: "Non trovato" });
+      if (!item) { res.status(404).json({ message: "Non trovato" }); return; }
       res.json({ message: "Eliminato" });
     } catch (err) {
       res.status(500).json({ message: "Errore nell'eliminazione" });

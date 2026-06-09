@@ -1,7 +1,8 @@
-import { IsString, IsOptional } from "class-validator";
+import { IsString, IsOptional,IsNotEmpty} from "class-validator";
 
 
 export class Add{{Name}}DTO {
+  @IsNotEmpty()
   @IsString()
   name: string;
 }
