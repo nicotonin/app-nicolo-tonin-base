@@ -173,3 +173,23 @@ button:disabled {
   color: #3b5de7;
   text-decoration: underline;
 }
+
+.field-error {
+  display: block;
+  margin-top: 4px;
+  color: #e53e3e;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.field-error-list {
+  margin: 4px 0 0 0;
+  padding-left: 18px;
+  color: #e53e3e;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.field-error-list li {
+  margin-bottom: 2px;
+}

@@ -2,8 +2,7 @@
 
   <div class="card">
 
-    <h1>Crea account</h1>
-    <p class="subtitle">Registrati alla piattaforma Prospettiva</p>
+    <h1>Create account</h1>
 
     <form (ngSubmit)="register()" [formGroup]="registerForm">
 
@@ -13,6 +12,12 @@
         <span class="icon">👤</span>
         <input type="text" formControlName="firstName" placeholder="Mario">
       </div>
+      <small class="field-error" *ngIf="(submitted || registerForm.get('firstName')?.touched) && registerForm.get('firstName')?.errors?.['required']">
+        Enter your first name
+      </small>
+      <small class="field-error" *ngIf="registerForm.get('firstName')?.errors?.['backend']">
+        {{ registerForm.get('firstName')?.errors?.['backend'] }}
+      </small>
 
       <!-- LAST NAME -->
       <label>Last Name</label>
@@ -20,13 +25,30 @@
         <span class="icon">👤</span>
         <input type="text" formControlName="lastName" placeholder="Rossi">
       </div>
+      <small class="field-error" *ngIf="(submitted || registerForm.get('lastName')?.touched) && registerForm.get('lastName')?.errors?.['required']">
+        Enter your last name
+      </small>
+      <small class="field-error" *ngIf="registerForm.get('lastName')?.errors?.['backend']">
+        {{ registerForm.get('lastName')?.errors?.['backend'] }}
+      </small>
 
       <!-- EMAIL -->
       <label>Email</label>
       <div class="input-box">
         <span class="icon">✉</span>
-        <input type="email" formControlName="email" placeholder="nome@azienda.it">
+        <input type="email" formControlName="email" placeholder="name@company.com">
       </div>
+      <small class="field-error" *ngIf="(submitted || registerForm.get('email')?.touched) && registerForm.get('email')?.errors?.['required']">
+        Enter your email
+      </small>
+      <ul class="field-error-list" *ngIf="(submitted || registerForm.get('email')?.touched) && registerForm.get('email')?.errors && !registerForm.get('email')?.errors?.['required']">
+        <li *ngIf="registerForm.get('email')?.errors?.['missingLocalPart']">Name before @</li>
+        <li *ngIf="registerForm.get('email')?.errors?.['missingDomain']">Domain after @</li>
+        <li *ngIf="registerForm.get('email')?.errors?.['missingTld']">Extension like .it or .com</li>
+      </ul>
+      <small class="field-error" *ngIf="registerForm.get('email')?.errors?.['backend']">
+        {{ registerForm.get('email')?.errors?.['backend'] }}
+      </small>
 
       <!-- PASSWORD -->
       <label>Password</label>
@@ -34,17 +56,49 @@
         <span class="icon">🔒</span>
         <input type="password" formControlName="password" placeholder="••••••••">
       </div>
+      <small class="field-error" *ngIf="(submitted || registerForm.get('password')?.touched) && registerForm.get('password')?.errors?.['required']">
+        Enter your password
+      </small>
+      <ul class="field-error-list" *ngIf="(submitted || registerForm.get('password')?.touched) && registerForm.get('password')?.errors && !registerForm.get('password')?.errors?.['required']">
+        <li *ngIf="registerForm.get('password')?.errors?.['minLength']">At least 8 characters</li>
+        <li *ngIf="registerForm.get('password')?.errors?.['missingUppercase']">At least one uppercase letter</li>
+        <li *ngIf="registerForm.get('password')?.errors?.['missingLowercase']">At least one lowercase letter</li>
+        <li *ngIf="registerForm.get('password')?.errors?.['missingNumber']">At least one number</li>
+        <li *ngIf="registerForm.get('password')?.errors?.['missingSpecialChar']">At least one special character</li>
+      </ul>
+      <small class="field-error" *ngIf="registerForm.get('password')?.errors?.['backend']">
+        {{ registerForm.get('password')?.errors?.['backend'] }}
+      </small>
+
+      <!-- CONFIRM PASSWORD -->
+      <label>Confirm Password</label>
+      <div class="input-box">
+        <span class="icon">🔒</span>
+        <input type="password" formControlName="confirmPassword" placeholder="••••••••">
+      </div>
+      <small class="field-error" *ngIf="(submitted || registerForm.get('confirmPassword')?.touched) && registerForm.get('confirmPassword')?.errors?.['required']">
+        Confirm your password
+      </small>
+      <small class="field-error" *ngIf="(submitted || registerForm.get('confirmPassword')?.touched) && registerForm.errors?.['passwordsMismatch'] && !registerForm.get('confirmPassword')?.errors?.['required']">
+        Passwords do not match
+      </small>
 
       <!-- ROLE -->
       <label>Role</label>
       <div class="input-box">
         <span class="icon">🛡</span>
         <select formControlName="role">
-          <option value="">-- Seleziona ruolo --</option>
-          <option value="role1">role1</option>
-          <option value="role2">role2</option>
+          <option value="">-- Select a role --</option>
+          <option value="dipendente">dipendente</option>
+          <option value="responsabile">responsabile</option>
         </select>
       </div>
+      <small class="field-error" *ngIf="(submitted || registerForm.get('role')?.touched) && registerForm.get('role')?.errors?.['required']">
+        Select a role
+      </small>
+      <small class="field-error" *ngIf="registerForm.get('role')?.errors?.['backend']">
+        {{ registerForm.get('role')?.errors?.['backend'] }}
+      </small>
 
       <!-- ERROR -->
       <div class="error" *ngIf="registerError">
@@ -52,15 +106,17 @@
       </div>
 
       <!-- BUTTON -->
-      <button type="submit">
-        Registrati →
+      <button type="submit" class="btn-submit" [ngClass]="{ registered: registered }" [disabled]="loading || registered">
+        <span *ngIf="loading">Registering...</span>
+        <span *ngIf="!loading && !registered">Register →</span>
+        <span *ngIf="registered">Registrato</span>
       </button>
 
     </form>
 
     <div class="footer">
-      Hai già un account?
-      <a [routerLink]="['/login']">Accedi</a>
+      Already have an account?
+      <a [routerLink]="['/login']">Sign in</a>
     </div>
 
   </div>

@@ -3,15 +3,13 @@ import { IsEmail, IsNotEmpty, IsString, IsStrongPassword, IsUrl, Matches, MinLen
 export class AddUserDTO {
     @IsString()
     @IsNotEmpty({ message: 'FirstName should not be empty or just spaces' })
-    @Matches(/^[A-Za-z\s]+$/, { message: 'FirstName must only contain letters and spaces' })
+    @Matches(/^[A-Za-zÀÈÉÌÒÙàèéìòù\s]+$/, { message: 'FirstName must only contain letters and spaces' })
     firstName: string;
 
     @IsString()
     @IsNotEmpty({ message: 'LastName should not be empty or just spaces' })
-    @Matches(/^[A-Za-z\s]+$/, { message: 'LastName must only contain letters and spaces' })
+    @Matches(/^[A-Za-zÀÈÉÌÒÙàèéìòù\s]+$/, { message: 'LastName must only contain letters and spaces' })
     lastName: string;
-
-   
 
     @IsEmail()
     email: string;
@@ -23,4 +21,8 @@ export class AddUserDTO {
         minLength: 8
     })
     password: string;
+
+    @IsString()
+    @IsNotEmpty({ message: 'ConfirmPassword should not be empty' })
+    confirmPassword: string;
 }

@@ -4,6 +4,6 @@
     {{user.fullName}}
   </a>
   <div ngbDropdownMenu class="dropdown-menu dropdown-menu-end">
-    <button ngbDropdownItem (click)="onLogout()">Logout</button>
+    <button ngbDropdownItem (click)="onLogout()" [routerLink]="['/login']">Logout</button>
   </div>
 </li>

@@ -85,6 +85,17 @@ label {
   flex-shrink: 0;
 }
 
+.success {
+  margin-top: 12px;
+  color: #276749;
+  font-size: 13px;
+  font-weight: 500;
+  background: #f0fff4;
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: 1px solid #c6f6d5;
+}
+
 .error {
   margin-top: 12px;
   color: #e53e3e;
@@ -127,6 +138,14 @@ button:disabled {
   box-shadow: none;
 }
 
+button.registered {
+  background: linear-gradient(135deg, #38a169 0%, #2f855a 100%);
+}
+
+button.registered:hover {
+  box-shadow: 0 6px 20px rgba(56, 161, 105, 0.3);
+}
+
 .footer {
   margin-top: 28px;
   text-align: center;
@@ -155,4 +174,24 @@ button:disabled {
   padding: 10px 14px;
   border-radius: 8px;
   border: 1px solid #fed7d7;
+}
+
+.field-error {
+  display: block;
+  margin-top: 4px;
+  color: #e53e3e;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.field-error-list {
+  margin: 4px 0 0 0;
+  padding-left: 18px;
+  color: #e53e3e;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.field-error-list li {
+  margin-bottom: 2px;
 }

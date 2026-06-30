@@ -3,6 +3,7 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { catchError, map, Subject, takeUntil, throwError } from 'rxjs';
 import { AuthService } from '../../../service/auth.service';
+import { emailValidator, passwordStrengthValidator } from '../register/register.component';
 
 @Component({
   selector: 'app-login',
@@ -20,10 +21,11 @@ export class LoginComponent implements OnInit, OnDestroy {
   private destroyed$ = new Subject<void>();
 
   loginForm = this.fb.group({
-    email: ['', Validators.required],
-    password: ['', Validators.required]
+    email: ['', [Validators.required, emailValidator]],
+    password: ['', [Validators.required, passwordStrengthValidator]]
   });
 
+  submitted = false;
   loginError = '';
   requestedUrl: string | null = null;
 
@@ -34,6 +36,13 @@ export class LoginComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroyed$))
       .subscribe(() => {
         this.loginError = '';
+        Object.keys(this.loginForm.controls).forEach(key => {
+          const control = this.loginForm.get(key);
+          if (control?.errors?.['backend']) {
+            const { backend, ...rest } = control.errors;
+            control.setErrors(Object.keys(rest).length ? rest : null);
+          }
+        });
       });
 
     this.activatedRoute.queryParams
@@ -52,6 +61,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   login() {
+    this.submitted = true;
     if (this.loginForm.invalid) return;
 
     const { email, password } = this.loginForm.value;
@@ -61,7 +71,13 @@ export class LoginComponent implements OnInit, OnDestroy {
     this.authSrv.login(email!, password!)
       .pipe(
         catchError(err => {
-          this.loginError = err?.error?.message || 'Login error';
+          if (err.error?.message === 'invalid email') {
+            this.loginForm.get('email')?.setErrors({ backend: 'Email not found' });
+          } else if (err.error?.message === 'password supplied') {
+            this.loginForm.get('password')?.setErrors({ backend: 'Wrong password' });
+          } else {
+            this.loginError = err?.error?.message || 'Login error';
+          }
           this.loading = false;
           return throwError(() => err);
         })

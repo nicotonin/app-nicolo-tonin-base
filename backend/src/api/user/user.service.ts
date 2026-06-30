@@ -20,7 +20,7 @@ export class UserService {
         }
         const newUser = await UserModel.create(user);
 
-        const hashedPassword = await bcrypt.hash(credentials.password, 10);
+        const hashedPassword = await bcrypt.hash(credentials.password, 6);
 
         await UserIdentityModel.create({
             provider: 'local',

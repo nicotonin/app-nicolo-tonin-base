@@ -2,8 +2,7 @@
 
   <div class="card">
 
-    <h1>Bentornato</h1>
-    <p class="subtitle">Accedi alla tua area riservata Prospettiva</p>
+    <h1>Welcome</h1>
 
     <form [formGroup]="loginForm" (ngSubmit)="login()">
 
@@ -13,6 +12,17 @@
         <span class="icon">✉</span>
         <input type="email" formControlName="email" placeholder="nome@azienda.it">
       </div>
+      <small class="field-error" *ngIf="(submitted || loginForm.get('email')?.touched) && loginForm.get('email')?.errors?.['required']">
+        Enter your email
+      </small>
+      <ul class="field-error-list" *ngIf="(submitted || loginForm.get('email')?.touched) && loginForm.get('email')?.errors && !loginForm.get('email')?.errors?.['required']">
+        <li *ngIf="loginForm.get('email')?.errors?.['missingLocalPart']">Name before @</li>
+        <li *ngIf="loginForm.get('email')?.errors?.['missingDomain']">Domain after @</li>
+        <li *ngIf="loginForm.get('email')?.errors?.['missingTld']">Extension like .it or .com</li>
+      </ul>
+      <small class="field-error" *ngIf="loginForm.get('email')?.errors?.['backend']">
+        {{ loginForm.get('email')?.errors?.['backend'] }}
+      </small>
 
       <!-- PASSWORD -->
       <label>Password</label>
@@ -20,26 +30,28 @@
         <span class="icon">🔒</span>
         <input type="password" formControlName="password" placeholder="••••••••">
       </div>
+      <small class="field-error" *ngIf="(submitted || loginForm.get('password')?.touched) && loginForm.get('password')?.errors?.['required']">
+        Enter your password
+      </small>
+      <ul class="field-error-list" *ngIf="(submitted || loginForm.get('password')?.touched) && loginForm.get('password')?.errors && !loginForm.get('password')?.errors?.['required']">
+        <li *ngIf="loginForm.get('password')?.errors?.['minLength']">At least 8 characters</li>
+        <li *ngIf="loginForm.get('password')?.errors?.['missingUppercase']">At least one uppercase letter</li>
+        <li *ngIf="loginForm.get('password')?.errors?.['missingLowercase']">At least one lowercase letter</li>
+        <li *ngIf="loginForm.get('password')?.errors?.['missingNumber']">At least one number</li>
+        <li *ngIf="loginForm.get('password')?.errors?.['missingSpecialChar']">At least one special character</li>
+      </ul>
+      <small class="field-error" *ngIf="loginForm.get('password')?.errors?.['backend']">
+        {{ loginForm.get('password')?.errors?.['backend'] }}
+      </small>
 
       <!-- ERROR -->
       <div class="error" *ngIf="loginError">
         {{ loginError }}
       </div>
 
-      <!-- ROW -->
-      <div class="row">
-        <label class="remember">
-          <input type="checkbox">
-          Ricordami
-        </label>
-
-        <a routerLink="/forgot-password">Password dimenticata?</a>
-      </div>
-
       <!-- BUTTON -->
       <button type="submit" [disabled]="loading">
         <span *ngIf="!loading">Accedi →</span>
-        <span *ngIf="loading">Caricamento...</span>
       </button>
 
     </form>
