@@ -1,15 +1,14 @@
 import { Router } from "express";
-import {{Name}} from "stream/iter";
-import {{Name}}Controller from "./{{name}}.controller";
+import { list, get, create, update, remove } from "./{{name}}.controller";
 import { Add{{Name}}DTO, Update{{Name}}DTO } from "./{{name}}.dto";
 import { validate } from "../../lib/validation-middleware";
 
 const router = Router();
 
-router.get("/", {{Name}}Controller.list);
-router.get("/:id", {{Name}}Controller.get);
-router.post("/",validate(Add{{Name}}DTO),{{Name}}Controller.create);
-router.put("/:id",validate(Update{{Name}}DTO),{{Name}}Controller.update);
-router.delete("/:id", {{Name}}Controller.remove);
+router.get("/", list);
+router.get("/:id", get);
+router.post("/", validate(Add{{Name}}DTO), create);
+router.put("/:id", validate(Update{{Name}}DTO), update);
+router.delete("/:id", remove);
 
 export default router;

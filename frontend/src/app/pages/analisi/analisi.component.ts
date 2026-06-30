@@ -1,21 +1,22 @@
+
 import { Component, inject } from '@angular/core';
-import { CategoryService } from '../../../service/category.service';
+import { AnalisiService } from '../../../service/analisi.service';
 import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { BehaviorSubject, switchMap, of, catchError } from 'rxjs';
 import { AuthService } from '../../../service/auth.service';
-import { Category } from '../../../service/category.entity';
-import { CategoryModalComponent } from './category-modal.component';
+import { Analisi } from '../../../service/analisi.entity';
+import { AnalisiModalComponent } from './analisi-modal.component';
 
 @Component({
-  selector: 'app-category',
+  selector: 'app-analisi',
   standalone: false,
-  templateUrl: './category.component.html',
-  styleUrl: './category.component.css',
+  templateUrl: './analisi.component.html',
+  styleUrl: './analisi.component.css',
 })
-export class CategoryComponent {
+export class AnalisiComponent {
 
-  private srv = inject(CategoryService);
+  private srv = inject(AnalisiService);
   private router = inject(Router);
   private modalService = inject(NgbModal);
   protected authSrv = inject(AuthService);
@@ -40,7 +41,7 @@ export class CategoryComponent {
   );
 
   openAdd() {
-    const modalRef = this.modalService.open(CategoryModalComponent);
+    const modalRef = this.modalService.open(AnalisiModalComponent);
 
     modalRef.result.then(() => {
       this.refresh$.next();
@@ -53,8 +54,8 @@ export class CategoryComponent {
     });
   }
 
-  edit(item: Category) {
-    const modalRef = this.modalService.open(CategoryModalComponent);
+  edit(item: Analisi) {
+    const modalRef = this.modalService.open(AnalisiModalComponent);
 
     modalRef.componentInstance.setData(item);
 
@@ -64,6 +65,6 @@ export class CategoryComponent {
   }
 
   openDetail(id: string) {
-    this.router.navigate(['/category', id]);
+    this.router.navigate(['/analisi', id]);
   }
 }

@@ -1,28 +1,26 @@
-import { create } from "domain";
-import { get } from "http";
-import {{Name}} from "stream/iter";
-import {{{Name}}Model} from "./{{name}}.model";
+import { {{Name}}Model } from "./{{name}}.model";
+import { {{Name}} } from "./{{name}}.entity";
 
-class {{Name}}Service {
+export class {{Name}}Service {
 
-  list() {
-    return {{Name}}Model.find();
+  async list(): Promise<{{Name}}[]> {
+    return await {{Name}}Model.find();
   }
 
-  get(id: string) {
-    return {{Name}}Model.findById(id);
+  async get(id: string): Promise<{{Name}} | null> {
+    return await {{Name}}Model.findById(id);
   }
 
-  create(data: any) {
-    return {{Name}}Model.create(data);
+  async create(data: Partial<{{Name}}>): Promise<{{Name}}> {
+    return await {{Name}}Model.create(data);
   }
 
-  update(id: string, data: any) {
-    return {{Name}}Model.findByIdAndUpdate(id, data, { new: true });
+  async update(id: string, data: Partial<{{Name}}>): Promise<{{Name}} | null> {
+    return await {{Name}}Model.findByIdAndUpdate(id, data, { new: true });
   }
 
-  remove(id: string) {
-    return {{Name}}Model.findByIdAndDelete(id);
+  async remove(id: string): Promise<{{Name}} | null> {
+    return await {{Name}}Model.findByIdAndDelete(id);
   }
 }
 

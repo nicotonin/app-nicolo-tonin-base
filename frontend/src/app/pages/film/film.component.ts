@@ -42,10 +42,8 @@ export class FilmComponent {
   openAdd() {
     const modalRef = this.modalService.open(FilmModalComponent);
 
-    modalRef.result.then((result) => {
-      this.srv.create(result).subscribe(() => {
-        this.refresh$.next();
-      });
+    modalRef.result.then(() => {
+      this.refresh$.next();
     }).catch(() => {});
   }
 
@@ -60,10 +58,8 @@ export class FilmComponent {
 
     modalRef.componentInstance.setData(item);
 
-    modalRef.result.then((result) => {
-      this.srv.update(item.id, result).subscribe(() => {
-        this.refresh$.next();
-      });
+    modalRef.result.then(() => {
+      this.refresh$.next();
     }).catch(() => {});
   }
 

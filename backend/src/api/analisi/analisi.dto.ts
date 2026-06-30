@@ -1,12 +1,12 @@
 import { IsString, IsOptional, IsNotEmpty } from "class-validator";
 
-export class Add{{Name}}DTO {
+export class AddAnalisiDTO {
   @IsString()
   @IsNotEmpty({ message: 'Name should not be empty' })
   name: string;
 }
 
-export class Update{{Name}}DTO {
+export class UpdateAnalisiDTO {
   @IsOptional()
   @IsString()
   name?: string;

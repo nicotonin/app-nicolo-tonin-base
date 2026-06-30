@@ -1,21 +1,22 @@
+
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { Category } from '../../../service/category.entity';
-import { CategoryService } from '../../../service/category.service';
+import { Analisi } from '../../../service/analisi.entity';
+import { AnalisiService } from '../../../service/analisi.service';
 
 @Component({
-  selector: 'app-category-modal',
+  selector: 'app-analisi-modal',
   standalone: true,
   imports: [CommonModule, FormsModule],
-  styleUrl: './category-modal.component.css',
+  styleUrl: './analisi-modal.component.css',
   template: `
     <div class="modal-header">
-      <h4 class="modal-title">{{ item.id ? 'Modifica' : 'Aggiungi' }} Categoria</h4>
+      <h4 class="modal-title">{{ item.id ? 'Modifica' : 'Aggiungi' }} Analisi</h4>
     </div>
 
-    <form #categoryForm="ngForm">
+    <form #form="ngForm">
     <div class="modal-body">
 
       <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
@@ -27,19 +28,11 @@ import { CategoryService } from '../../../service/category.service';
           Name is required
         </div>
       </div>
-
-      <div class="mb-3">
-        <label class="form-label">Descrizione</label>
-        <textarea class="form-control" name="description" [(ngModel)]="item.description" #description="ngModel" required></textarea>
-        <div *ngIf="description.invalid && description.touched" class="text-danger mt-1">
-          Description is required
-        </div>
-      </div>
     </div>
 
     <div class="modal-footer">
       <button type="button" class="btn btn-secondary" (click)="activeModal.dismiss()">Annulla</button>
-      <button type="button" class="btn btn-primary" [disabled]="categoryForm.invalid || loading" (click)="confirm()">
+      <button type="button" class="btn btn-primary" [disabled]="form.invalid || loading" (click)="confirm()">
         <span *ngIf="loading" class="spinner-border spinner-border-sm me-1"></span>
         Conferma
       </button>
@@ -47,16 +40,16 @@ import { CategoryService } from '../../../service/category.service';
     </form>
   `
 })
-export class CategoryModalComponent {
+export class AnalisiModalComponent {
 
   activeModal = inject(NgbActiveModal);
-  private categorySrv = inject(CategoryService);
+  private srv = inject(AnalisiService);
 
-  item: Partial<Category> = {};
+  item: Partial<Analisi> = {};
   loading = false;
   errorMessage = '';
 
-  setData(data: Category) {
+  setData(data: Analisi) {
     this.item = { ...data };
   }
 
@@ -65,8 +58,8 @@ export class CategoryModalComponent {
     this.errorMessage = '';
 
     const request = this.item.id
-      ? this.categorySrv.update(this.item.id, this.item)
-      : this.categorySrv.create(this.item);
+      ? this.srv.update(this.item.id, this.item)
+      : this.srv.create(this.item);
 
     request.subscribe({
       next: (result) => {

@@ -1,7 +1,7 @@
 import { NgModule, provideBrowserGlobalErrorListeners } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { AppRoutingModule } from './app-routing-module';
+
 import { App } from './app';
 import { AppComponent } from './app.component';
 import { authInterceptor } from '../utils/auth.interceptor';
@@ -18,10 +18,14 @@ import { CategoryComponent } from './pages/category/category.component';
 import { CategoryDetailComponent } from './pages/category/category-detail.component';
 import { FilmComponent } from './pages/film/film.component';
 import { FilmDetailComponent } from './pages/film/film-detail.component';
-
+import { AnalisiComponent } from './pages/analisi/analisi.component';
+import { AnalisiDetailComponent } from './pages/analisi/analisi-detail.component';
+import { AppRoutingModule } from './app-routing-module';
 
 @NgModule({
   declarations: [
+    AnalisiComponent,
+    AnalisiDetailComponent,
     App,
     AppComponent,
     LoginComponent,
@@ -34,7 +38,6 @@ import { FilmDetailComponent } from './pages/film/film-detail.component';
     CategoryDetailComponent,
     FilmComponent,
     FilmDetailComponent,
-
   ],
   imports: [
     BrowserModule,

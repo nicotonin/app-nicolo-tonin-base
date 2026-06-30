@@ -12,11 +12,13 @@ const ClassName = name.charAt(0).toUpperCase() + name.slice(1);
 const root = process.cwd();
 
 const pagePath = path.join(root, 'src/app/pages', name);
+const detailPath = path.join(root, 'src/app/pages', `${name}-detail`);
+const modalPath = path.join(root, 'src/app/components', `${name}-modal`);
 const servicePath = path.join(root, 'src/service');
 
-/* 🔥 CREA CARTELLE SE NON ESISTONO */
 fs.mkdirSync(pagePath, { recursive: true });
-fs.mkdirSync(servicePath, { recursive: true });
+fs.mkdirSync(detailPath, { recursive: true });
+fs.mkdirSync(modalPath, { recursive: true });
 
 /* =========================
    COMPONENT TS (LIST PAGE)
@@ -29,7 +31,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { BehaviorSubject, switchMap, of, catchError } from 'rxjs';
 import { AuthService } from '../../../service/auth.service';
 import { ${ClassName} } from '../../../service/${name}.entity';
-import { ${ClassName}ModalComponent } from './${name}-modal.component';
+import { ${ClassName}ModalComponent } from '../../components/${name}-modal/${name}-modal.component';
 
 @Component({
   selector: 'app-${name}',
@@ -66,10 +68,8 @@ export class ${ClassName}Component {
   openAdd() {
     const modalRef = this.modalService.open(${ClassName}ModalComponent);
 
-    modalRef.result.then((result) => {
-      this.srv.create(result).subscribe(() => {
-        this.refresh$.next();
-      });
+    modalRef.result.then(() => {
+      this.refresh$.next();
     }).catch(() => {});
   }
 
@@ -84,10 +84,8 @@ export class ${ClassName}Component {
 
     modalRef.componentInstance.setData(item);
 
-    modalRef.result.then((result) => {
-      this.srv.update(item.id, result).subscribe(() => {
-        this.refresh$.next();
-      });
+    modalRef.result.then(() => {
+      this.refresh$.next();
     }).catch(() => {});
   }
 
@@ -288,16 +286,7 @@ button:hover {
 `;
 
 /* =========================
-   MODAL CSS
-========================= */
-const modalCss = `
-.modal-body {
-  padding: 20px;
-}
-`;
-
-/* =========================
-   MODAL COMPONENT
+   MODAL COMPONENT (with validation)
 ========================= */
 const modalTs = `
 import { Component, inject } from '@angular/core';
@@ -305,6 +294,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { ${ClassName} } from '../../../service/${name}.entity';
+import { ${ClassName}Service } from '../../../service/${name}.service';
 
 @Component({
   selector: 'app-${name}-modal',
@@ -313,34 +303,64 @@ import { ${ClassName} } from '../../../service/${name}.entity';
   styleUrl: './${name}-modal.component.css',
   template: \`
     <div class="modal-header">
-      <h4 class="modal-title">{{ item.id ? 'Modifica' : 'Aggiungi' }} ${name}</h4>
+      <h4 class="modal-title">{{ item.id ? 'Modifica' : 'Aggiungi' }} ${ClassName}</h4>
     </div>
 
+    <form #form="ngForm">
     <div class="modal-body">
+
+      <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+
       <div class="mb-3">
-        <label class="form-label">Nome</label>
-        <input type="text" class="form-control" [(ngModel)]="item.name" />
+        <label class="form-label">Name</label>
+        <input type="text" class="form-control" name="name" [(ngModel)]="item.name" #name="ngModel" required />
+        <div *ngIf="name.invalid && name.touched" class="text-danger mt-1">
+          Name is required
+        </div>
       </div>
+
     </div>
 
     <div class="modal-footer">
       <button type="button" class="btn btn-secondary" (click)="activeModal.dismiss()">Annulla</button>
-      <button type="button" class="btn btn-primary" (click)="confirm()">Conferma</button>
+      <button type="button" class="btn btn-primary" [disabled]="form.invalid || loading" (click)="confirm()">
+        <span *ngIf="loading" class="spinner-border spinner-border-sm me-1"></span>
+        Conferma
+      </button>
     </div>
+    </form>
   \`
 })
 export class ${ClassName}ModalComponent {
 
   activeModal = inject(NgbActiveModal);
+  private srv = inject(${ClassName}Service);
 
   item: Partial<${ClassName}> = {};
+  loading = false;
+  errorMessage = '';
 
   setData(data: ${ClassName}) {
     this.item = { ...data };
   }
 
   confirm() {
-    this.activeModal.close(this.item);
+    this.loading = true;
+    this.errorMessage = '';
+
+    const request = this.item.id
+      ? this.srv.update(this.item.id, this.item)
+      : this.srv.create(this.item);
+
+    request.subscribe({
+      next: (result) => {
+        this.activeModal.close(result);
+      },
+      error: (err) => {
+        this.loading = false;
+        this.errorMessage = err.error?.message || 'An unexpected error occurred';
+      }
+    });
   }
 }
 `;
@@ -353,7 +373,6 @@ import { Component, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { switchMap } from 'rxjs';
 import { ${ClassName}Service } from '../../../service/${name}.service';
-import { ${ClassName} } from '../../../service/${name}.entity';
 
 @Component({
   selector: 'app-${name}-detail',
@@ -382,7 +401,7 @@ const detailHtml = `
 
   <div *ngIf="item$ | async as item; else loading" class="card">
     <p><strong>ID:</strong> {{ item.id }}</p>
-    <p><strong>Nome:</strong> {{ item.name }}</p>
+    <p><strong>Name:</strong> {{ item.name }}</p>
   </div>
 
   <ng-template #loading>
@@ -467,11 +486,20 @@ h1 {
 `;
 
 /* =========================
+   MODAL CSS
+========================= */
+const modalCss = `
+.modal-body {
+  padding: 20px;
+}
+`;
+
+/* =========================
    ENTITY
 ========================= */
 const entity = `
 export type ${ClassName} = {
-  id?: string;
+  id: string;
   name: string;
 };
 `;
@@ -532,11 +560,13 @@ export class ${ClassName}Service {
 fs.writeFileSync(path.join(pagePath, `${name}.component.ts`), componentTs);
 fs.writeFileSync(path.join(pagePath, `${name}.component.html`), componentHtml);
 fs.writeFileSync(path.join(pagePath, `${name}.component.css`), componentCss);
-fs.writeFileSync(path.join(pagePath, `${name}-modal.component.css`), modalCss);
-fs.writeFileSync(path.join(pagePath, `${name}-modal.component.ts`), modalTs);
-fs.writeFileSync(path.join(pagePath, `${name}-detail.component.ts`), detailTs);
-fs.writeFileSync(path.join(pagePath, `${name}-detail.component.html`), detailHtml);
-fs.writeFileSync(path.join(pagePath, `${name}-detail.component.css`), detailCss);
+
+fs.writeFileSync(path.join(modalPath, `${name}-modal.component.ts`), modalTs);
+fs.writeFileSync(path.join(modalPath, `${name}-modal.component.css`), modalCss);
+
+fs.writeFileSync(path.join(detailPath, `${name}-detail.component.ts`), detailTs);
+fs.writeFileSync(path.join(detailPath, `${name}-detail.component.html`), detailHtml);
+fs.writeFileSync(path.join(detailPath, `${name}-detail.component.css`), detailCss);
 
 fs.writeFileSync(path.join(servicePath, `${name}.entity.ts`), entity);
 fs.writeFileSync(path.join(servicePath, `${name}.service.ts`), service);
@@ -550,7 +580,7 @@ const modulePath = path.join(root, 'src/app/app-module.ts');
 let moduleContent = fs.readFileSync(modulePath, 'utf-8');
 
 const pageImport = `import { ${ClassName}Component } from './pages/${name}/${name}.component';`;
-const detailImport = `import { ${ClassName}DetailComponent } from './pages/${name}/${name}-detail.component';`;
+const detailImport = `import { ${ClassName}DetailComponent } from './pages/${name}-detail/${name}-detail.component';`;
 
 for (const imp of [pageImport, detailImport]) {
   if (!moduleContent.includes(imp)) {
@@ -585,7 +615,7 @@ const routingPath = path.join(root, 'src/app/app-routing-module.ts');
 let routingContent = fs.readFileSync(routingPath, 'utf-8');
 
 const routingImport = `import { ${ClassName}Component } from './pages/${name}/${name}.component';`;
-const routingDetailImport = `import { ${ClassName}DetailComponent } from './pages/${name}/${name}-detail.component';`;
+const routingDetailImport = `import { ${ClassName}DetailComponent } from './pages/${name}-detail/${name}-detail.component';`;
 
 if (!routingContent.includes(routingImport)) {
   const lines = routingContent.split('\n');
@@ -607,4 +637,3 @@ if (!routingContent.includes(`path: '${name}'`)) {
 fs.writeFileSync(routingPath, routingContent);
 
 console.log('✅ RoutingModule aggiornato (routes)');
-

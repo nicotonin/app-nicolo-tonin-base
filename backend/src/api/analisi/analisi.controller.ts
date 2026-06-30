@@ -1,7 +1,7 @@
 import { Response, NextFunction } from "express";
-import {{Name}}Service from "./{{name}}.service";
+import AnalisiService from "./analisi.service";
 import { TypedRequest } from "../../lib/typed-request.interface";
-import { Add{{Name}}DTO, Update{{Name}}DTO } from "./{{name}}.dto";
+import { AddAnalisiDTO, UpdateAnalisiDTO } from "./analisi.dto";
 import { NotFoundError } from "../../errors/not-found-error";
 
 export const list = async (
@@ -10,7 +10,7 @@ export const list = async (
   next: NextFunction
 ) => {
   try {
-    res.json(await {{Name}}Service.list());
+    res.json(await AnalisiService.list());
   } catch (err) {
     next(err);
   }
@@ -22,7 +22,7 @@ export const get = async (
   next: NextFunction
 ) => {
   try {
-    const item = await {{Name}}Service.get(req.params.id);
+    const item = await AnalisiService.get(req.params.id);
     if (!item) throw new NotFoundError();
     res.json(item);
   } catch (err) {
@@ -31,24 +31,24 @@ export const get = async (
 };
 
 export const create = async (
-  req: TypedRequest<Add{{Name}}DTO>,
+  req: TypedRequest<AddAnalisiDTO>,
   res: Response,
   next: NextFunction
 ) => {
   try {
-    res.status(201).json(await {{Name}}Service.create(req.body));
+    res.status(201).json(await AnalisiService.create(req.body));
   } catch (err) {
     next(err);
   }
 };
 
 export const update = async (
-  req: TypedRequest<Update{{Name}}DTO>,
+  req: TypedRequest<UpdateAnalisiDTO>,
   res: Response,
   next: NextFunction
 ) => {
   try {
-    const item = await {{Name}}Service.update(req.params.id, req.body);
+    const item = await AnalisiService.update(req.params.id, req.body);
     if (!item) throw new NotFoundError();
     res.json(item);
   } catch (err) {
@@ -62,7 +62,7 @@ export const remove = async (
   next: NextFunction
 ) => {
   try {
-    const item = await {{Name}}Service.remove(req.params.id);
+    const item = await AnalisiService.remove(req.params.id);
     if (!item) throw new NotFoundError();
     res.status(204).send();
   } catch (err) {
